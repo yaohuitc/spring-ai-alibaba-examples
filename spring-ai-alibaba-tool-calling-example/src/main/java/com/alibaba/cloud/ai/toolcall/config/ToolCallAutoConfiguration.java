@@ -16,12 +16,15 @@
 package com.alibaba.cloud.ai.toolcall.config;
 
 import com.alibaba.cloud.ai.toolcall.component.AddressInformationTools;
+import com.alibaba.cloud.ai.toolcall.component.DingTalkTools;
 import com.alibaba.cloud.ai.toolcall.component.TimeTools;
+import com.alibaba.cloud.ai.toolcall.service.DingTalkService;
 import com.alibaba.cloud.ai.toolcalling.baidumap.BaiduMapSearchInfoService;
 import com.alibaba.cloud.ai.toolcalling.time.GetTimeByZoneIdService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +46,17 @@ public class ToolCallAutoConfiguration {
     @Bean
     public AddressInformationTools addressInformationTools(BaiduMapSearchInfoService service) {
         return new AddressInformationTools(service);
+    }
+
+    @Bean
+    public DingTalkService dingTalkService(
+            @Value("${spring.ai.alibaba.toolcalling.dingtalk.access-token:}") String accessToken) {
+        return new DingTalkService(accessToken);
+    }
+
+    @Bean
+    public DingTalkTools dingTalkTools(DingTalkService dingTalkService) {
+        return new DingTalkTools(dingTalkService);
     }
 
     @Bean
